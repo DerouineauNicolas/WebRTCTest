@@ -11,21 +11,14 @@ services:
       - "10000-10200:10000-10200/udp"
     environment:
       - DOCKER_IP=${DOCKER_IP}
-    networks:
-      - network
 
-  static-code:
-    image: danjellz/http-server
-    ports:
-      - "81:8080"
-    environment:
-      - DOCKER_IP=${DOCKER_IP}
+  nginx:
+    build: ./nginx
     volumes:
-       - ./samplecode:/public
-    networks:
-      - network
+      - ./samplecode/:/samplecode/
+    ports:
+      - 81:81
+    depends_on:
+      - janus-gateway
 
-networks:
-  # Declare our private network.  We must declare one for the magic
-  # Docker DNS to work, but otherwise its default settings are fine.
-  network: {}
+
